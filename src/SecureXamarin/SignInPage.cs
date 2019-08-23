@@ -1,6 +1,8 @@
 ﻿using System;
 
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace SecureXamarin
 {
@@ -10,6 +12,8 @@ namespace SecureXamarin
         {
             Content = new StackLayout
             {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
                 Children = {
                     new Button
                     {

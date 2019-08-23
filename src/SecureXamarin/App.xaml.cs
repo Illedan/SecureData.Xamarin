@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
 
 namespace SecureXamarin
 {
-    public partial class App : Application
+    public partial class App : Xamarin.Forms.Application
     {
         private SignInPage signInPage;
-        private NavigationPage navigationPage;
+        private Xamarin.Forms.NavigationPage navigationPage;
         private SplashPage splashPage;
 
         public App()
@@ -15,7 +19,9 @@ namespace SecureXamarin
             InitializeComponent();
             signInPage = new SignInPage(OnSignIn);
             splashPage = new SplashPage(OnSplashAppearing);
-            MainPage = navigationPage = new NavigationPage(new MainPage());
+            MainPage = signInPage;
+            navigationPage = new Xamarin.Forms.NavigationPage(new MainPage());
+            navigationPage.On<iOS>().SetUseSafeArea(true);
         }
 
         protected override void OnStart()
@@ -42,13 +48,21 @@ namespace SecureXamarin
         private async void OnSignIn()
         {
             await navigationPage.Navigation.PopAsync();
+
             navigationPage.IsVisible = true;
             MainPage = navigationPage;
+            Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+            {
+                MainPage = navigationPage;
+            });
         }
 
-        private void OnSplashAppearing()
+        private async void OnSplashAppearing()
         {
-            MainPage = signInPage;
+            Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+            {
+                MainPage = signInPage;
+            });
         }
     }
 }
