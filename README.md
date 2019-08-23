@@ -8,7 +8,12 @@ Problem this solves is to hide data at every point of viewing the app after it s
 ## Android
 
 In MainActivity, add:
-`Window.SetFlags(WindowManagerFlags.Secure, WindowManagerFlags.Secure);`
+
+```csharp
+Window.SetFlags(WindowManagerFlags.Secure, WindowManagerFlags.Secure);
+```
+
+This is a flag in Android to force hiding content in App switcher.
 
 
 ## iOS
