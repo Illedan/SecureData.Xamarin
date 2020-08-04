@@ -10,6 +10,7 @@ namespace SecureXamarin
     {
         public SignInPage(Action onLogin)
         {
+            On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
             Content = new StackLayout
             {
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -23,6 +24,18 @@ namespace SecureXamarin
                     }
                 }
             };
+        }
+
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            var g = Content.GestureRecognizers;
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

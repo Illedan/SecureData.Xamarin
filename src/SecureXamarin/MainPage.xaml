@@ -5,12 +5,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="SecureXamarin.MainPage">
-
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="All your secrets!"
+    <ListView ItemsSource="{Binding Items}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+        <Label Text="{Binding Text}"
                HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand" />
-    </StackLayout>
-
+               VerticalOptions="CenterAndExpand" />            
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 </ContentPage>

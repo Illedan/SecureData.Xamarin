@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.PlatformConfiguration;
@@ -12,57 +13,70 @@ namespace SecureXamarin
     {
         private SignInPage signInPage;
         private Xamarin.Forms.NavigationPage navigationPage;
-        private SplashPage splashPage;
+        //private SplashPage splashPage;
 
         public App()
         {
             InitializeComponent();
             signInPage = new SignInPage(OnSignIn);
-            splashPage = new SplashPage(OnSplashAppearing);
-            MainPage = signInPage;
+            //splashPage = new SplashPage(OnSplashAppearing);
             navigationPage = new Xamarin.Forms.NavigationPage(new MainPage());
+            navigationPage.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
             navigationPage.On<iOS>().SetUseSafeArea(true);
+            MainPage = navigationPage;
+            _ = navigationPage.Navigation.PushModalAsync(signInPage);
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
         }
 
-        protected override void OnSleep()
+        protected override async void OnSleep()
         {
-            navigationPage.IsVisible = false;
+            if(signInPage.Parent == null)
+                await navigationPage.Navigation.PushModalAsync(signInPage);
+
+            //navigationPage.IsVisible = false;
         }
 
         protected override async void OnResume()
         {
-            try
-            {
-                await navigationPage.Navigation.PushAsync(splashPage);
-            }
-            catch (Exception e)
-            {
-                // Log it. 
-            }
+            //await navigationPage.Navigation.PushModalAsync(signInPage);
+
+            //try
+            //{
+            //    splashPage);
+            //}
+            //catch (Exception e)
+            //{
+            //    // Log it. 
+            //}
         }
 
         private async void OnSignIn()
         {
-            await navigationPage.Navigation.PopAsync();
+            //while (navigationPage.Navigation.NavigationStack.OfType<SplashPage>().Any())
+            //{
+            //    await Task.Delay(200);
+            //    navigationPage.Navigation.RemovePage(navigationPage.Navigation.NavigationStack.OfType<SplashPage>().First());
+            //}
+            //await navigationPage.Navigation.PopAsync();
 
-            navigationPage.IsVisible = true;
-            MainPage = navigationPage;
-            Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
-            {
-                MainPage = navigationPage;
-            });
+            await navigationPage.Navigation.PopModalAsync();
+            //navigationPage.IsVisible = true;
+            //Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+            //{
+            //    MainPage = navigationPage;
+            //});
         }
 
         private async void OnSplashAppearing()
         {
-            Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
-            {
-                MainPage = signInPage;
-            });
+            await navigationPage.Navigation.PushModalAsync(signInPage);
+            //Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
+            //{
+            //    MainPage = signInPage;
+            //});
         }
     }
 }
