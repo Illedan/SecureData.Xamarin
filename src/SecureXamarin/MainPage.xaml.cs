@@ -17,7 +17,7 @@ namespace SecureXamarin
     {
         public MainPage()
         {
-            On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
+            //On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
             InitializeComponent();
 
             for(var i = 0; i < 100; i++)

@@ -12,29 +12,33 @@ namespace SecureXamarin
     public partial class App : Xamarin.Forms.Application
     {
         private SignInPage signInPage;
-        private Xamarin.Forms.NavigationPage navigationPage;
+        private Xamarin.Forms.TabbedPage tabbedPage;
         //private SplashPage splashPage;
 
         public App()
         {
             InitializeComponent();
-            signInPage = new SignInPage(OnSignIn);
+            signInPage = new SignInPage(OnSignIn, OnSleep);
             //splashPage = new SplashPage(OnSplashAppearing);
-            navigationPage = new Xamarin.Forms.NavigationPage(new MainPage());
-            navigationPage.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
-            navigationPage.On<iOS>().SetUseSafeArea(true);
-            MainPage = navigationPage;
-            _ = navigationPage.Navigation.PushModalAsync(signInPage);
+            tabbedPage = new Xamarin.Forms.TabbedPage();
+            tabbedPage.Children.Add(new MainPage());
+            //navigationPage.On<iOS>().SetModalPresentationStyle(UIModalPresentationStyle.FullScreen);
+            tabbedPage.On<iOS>().SetUseSafeArea(true);
+            MainPage = tabbedPage;
+           // _ = navigationPage.Navigation.PushModalAsync(new MainPage());
+            _ = tabbedPage.Navigation.PushModalAsync(signInPage);
         }
 
         protected override async void OnStart()
         {
+           // ((Xamarin.Forms.TabbedPage)(Xamarin.Forms.Application.Current.MainPage)).Navigation.NavigationStack.Last().IsVisible = false;
         }
 
         protected override async void OnSleep()
         {
-            if(signInPage.Parent == null)
-                await navigationPage.Navigation.PushModalAsync(signInPage);
+           // ((Xamarin.Forms.NavigationPage)(Xamarin.Forms.Application.Current.MainPage)).Navigation.NavigationStack.Last().IsVisible = false;
+            if (signInPage.Parent == null)
+                await tabbedPage.Navigation.PushModalAsync(signInPage);
 
             //navigationPage.IsVisible = false;
         }
@@ -62,7 +66,7 @@ namespace SecureXamarin
             //}
             //await navigationPage.Navigation.PopAsync();
 
-            await navigationPage.Navigation.PopModalAsync();
+            await tabbedPage.Navigation.PopModalAsync();
             //navigationPage.IsVisible = true;
             //Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
             //{
@@ -72,7 +76,7 @@ namespace SecureXamarin
 
         private async void OnSplashAppearing()
         {
-            await navigationPage.Navigation.PushModalAsync(signInPage);
+            await tabbedPage.Navigation.PushModalAsync(signInPage);
             //Xamarin.Essentials.MainThread.BeginInvokeOnMainThread(() =>
             //{
             //    MainPage = signInPage;
